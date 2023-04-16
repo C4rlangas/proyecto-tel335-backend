@@ -7,7 +7,6 @@ const getUser = (ctx) => {
     const id = ctx.params.id_user
     user = userActions.getUserbyID(Number(id))  //Acceder a un numero desde la URL lo devuelve como string
     ctx.body = user
-
     return ctx
 }
 
@@ -21,8 +20,18 @@ const signUp = (ctx) => {
     return ctx
 }
 
+const logIn = (ctx) => {
+    const email = ctx.request.body.email
+    const password = ctx.request.body.password
+
+    const message = userActions.logUser(email,password)
+    ctx.body = {"Message": message}
+    return ctx
+}
+
 
 module.exports = {
     getUser,
-    signUp
+    signUp,
+    logIn
 }

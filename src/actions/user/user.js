@@ -24,8 +24,11 @@ const getUserbyID = (id) => {
 }
 
 const signUser = (u_name, u_email, u_password) => {
-    //Check if already in system
-
+    //Check if user already in system by email
+    const userExists = users.find( (user) => user.email === u_email)
+    if(userExists !== undefined){
+        return `Email ${u_email} already in use`
+    }
     
     //Register in System
     let newUser = {
@@ -39,7 +42,26 @@ const signUser = (u_name, u_email, u_password) => {
     return `User Signed Up, user_id = ${newUser.id}`
 }
 
+const logUser = (u_email, u_password) => {
+    //Check if user already in system by email
+    const userExists = users.find( (user) => user.email === u_email)
+    if(userExists === undefined){
+        return `Email ${u_email} not valid`
+    }
+
+    //Check if password matches
+    const passMatches = userExists.password === u_password
+    if(!passMatches){
+        return `Incorrect Password`
+    }
+
+    //Login Logic
+    //...
+    return "LogIn Success"
+}
+
 module.exports = {
     getUserbyID,
-    signUser
+    signUser,
+    logUser
 }

@@ -13,6 +13,8 @@ router.get('/api/user/:id_user', User.getUser)
 
 router.post('/api/user/signup',User.signUp)
 
+router.post('/api/user/login',User.logIn)
+
 
 
 
