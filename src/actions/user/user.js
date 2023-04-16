@@ -1,6 +1,10 @@
 //* All code logic related with SignUp and LogIn body request is here *//
 
+//* DEPENDENCIES AND MODULES*/
+const bcrypt = require('bcrypt')
+
 id = 3
+saltRounds = 2
 
 const users = [{
     id: 1,
@@ -23,26 +27,31 @@ const getUserbyID = (id) => {
     return user
 }
 
-const signUser = (u_name, u_email, u_password) => {
+const signUser = async (u_name, u_email, u_password) => {
     //Check if user already in system by email
     const userExists = users.find( (user) => user.email === u_email)
     if(userExists !== undefined){
         return `Email ${u_email} already in use`
     }
+
     
+    //Hashing password
+    const h_password = await bcrypt.hash(u_password, saltRounds)
+
     //Register in System
     let newUser = {
-        id: id,
-        name: u_name,
-        email: u_email,
-        password: u_password
+    id: id,
+    name: u_name,
+    email: u_email,
+    password: h_password
     }
     id = id+1
     users.push(newUser)
-    return `User Signed Up, user_id = ${newUser.id}`
+    const message = `User Signed Up, user_id = ${newUser.id}`
+    return message  
 }
 
-const logUser = (u_email, u_password) => {
+const logUser = async (u_email, u_password) => {
     //Check if user already in system by email
     const userExists = users.find( (user) => user.email === u_email)
     if(userExists === undefined){
@@ -50,7 +59,7 @@ const logUser = (u_email, u_password) => {
     }
 
     //Check if password matches
-    const passMatches = userExists.password === u_password
+    const passMatches = await bcrypt.compare(u_password, userExists.password) //El orden importa, primero la clave normal y luego la hasheada
     if(!passMatches){
         return `Incorrect Password`
     }

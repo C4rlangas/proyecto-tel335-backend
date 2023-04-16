@@ -10,21 +10,22 @@ const getUser = (ctx) => {
     return ctx
 }
 
-const signUp = (ctx) => {
+const signUp = async (ctx) => {
     const name = ctx.request.body.name
     const email = ctx.request.body.email
     const password = ctx.request.body.password
     
-    const message = userActions.signUser(name,email,password)
+    const message = await userActions.signUser(name,email,password)
+    
     ctx.body = {"Message": message}
     return ctx
 }
 
-const logIn = (ctx) => {
+const logIn = async (ctx) => {
     const email = ctx.request.body.email
     const password = ctx.request.body.password
 
-    const message = userActions.logUser(email,password)
+    const message = await userActions.logUser(email,password)
     ctx.body = {"Message": message}
     return ctx
 }
