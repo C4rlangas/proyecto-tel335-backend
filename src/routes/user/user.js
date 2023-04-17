@@ -1,8 +1,5 @@
 const userActions = require("../../actions/user/user.js")
 
-
-
-
 const getUser = (ctx) => {
     const id = ctx.params.id_user
     user = userActions.getUserbyID(Number(id))  //Acceder a un numero desde la URL lo devuelve como string
@@ -29,7 +26,6 @@ const logIn = async (ctx) => {
     ctx.body = {"Message": message}
     return ctx
 }
-
 
 module.exports = {
     getUser,

@@ -1,6 +1,6 @@
 const koa = require('koa')
 const bodyParser = require('koa-body')
-const router = require('./routes/index.js')
+const router = require('./routes/routes.js')
 
 const app = new koa()
 const port = 3001

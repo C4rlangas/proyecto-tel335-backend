@@ -13,8 +13,8 @@ const users = [{
     password: "123"
 },
 {
-    id:2,
-    name:"Tomo",
+    id: 2,
+    name: "Tomo",
     email: "tomoaki.iwaya@sansano.usm.cl",
     password: "momia es"
 }]
@@ -29,38 +29,38 @@ const getUserbyID = (id) => {
 
 const signUser = async (u_name, u_email, u_password) => {
     //Check if user already in system by email
-    const userExists = users.find( (user) => user.email === u_email)
-    if(userExists !== undefined){
+    const userExists = users.find((user) => user.email === u_email)
+    if (userExists !== undefined) {
         return `Email ${u_email} already in use`
     }
 
-    
+
     //Hashing password
     const h_password = await bcrypt.hash(u_password, saltRounds)
 
     //Register in System
     let newUser = {
-    id: id,
-    name: u_name,
-    email: u_email,
-    password: h_password
+        id: id,
+        name: u_name,
+        email: u_email,
+        password: h_password
     }
-    id = id+1
+    id = id + 1
     users.push(newUser)
     const message = `User Signed Up, user_id = ${newUser.id}`
-    return message  
+    return message
 }
 
 const logUser = async (u_email, u_password) => {
     //Check if user already in system by email
-    const userExists = users.find( (user) => user.email === u_email)
-    if(userExists === undefined){
+    const userExists = users.find((user) => user.email === u_email)
+    if (userExists === undefined) {
         return `Email ${u_email} not valid`
     }
 
     //Check if password matches
     const passMatches = await bcrypt.compare(u_password, userExists.password) //El orden importa, primero la clave normal y luego la hasheada
-    if(!passMatches){
+    if (!passMatches) {
         return `Incorrect Password`
     }
 
