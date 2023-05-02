@@ -13,3 +13,6 @@ Repositorio que contiene el BackEnd para la aplicación del proyecto del ramo De
 - Poblar las bases de datos
 - Crear las rutas necesarias (endpoints)
 - Testear
+
+#### Modelo de datos
+![Modelo de datos](./img/modelo_datos.png)  
