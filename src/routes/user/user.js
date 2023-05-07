@@ -27,8 +27,23 @@ const logIn = async (ctx) => {
     return ctx
 }
 
+const Insert = async (ctx) => {
+
+    const name = ctx.request.body.name
+    const lastname = ctx.request.body.lastname
+    const username = ctx.request.body.username
+    const email = ctx.request.body.email
+    const password = ctx.request.body.password
+    
+    const message = await userActions.insertUser(name,lastname,username,email,password)
+    
+    ctx.body = {"Message": message}
+    return ctx
+}
+
 module.exports = {
     getUser,
     signUp,
-    logIn
+    logIn,
+    Insert
 }

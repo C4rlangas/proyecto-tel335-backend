@@ -15,5 +15,7 @@ router.post('/api/user/signup', User.signUp)
 
 router.post('/api/user/login', User.logIn)
 
+router.post('/api/db/test', User.Insert)
+
 //* Exports */
 module.exports = router

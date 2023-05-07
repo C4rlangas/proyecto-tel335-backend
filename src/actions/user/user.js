@@ -1,6 +1,8 @@
 //* All code logic related with SignUp and LogIn body request is here *//
 
 //* DEPENDENCIES AND MODULES*/
+const database = require('../../db.js');
+
 const bcrypt = require('bcrypt')
 
 id = 3
@@ -69,8 +71,26 @@ const logUser = async (u_email, u_password) => {
     return "LogIn Success"
 }
 
+const insertUser = async (name, lastname, u_name ,u_email, u_password) => {
+
+    //Hashing password
+    const h_password = await bcrypt.hash(u_password, saltRounds)
+
+    //Register in System
+    const query = `INSERT INTO Usuarios (nombre, apellido, username, email, password) VALUES ("${name}", "${lastname}", "${u_name}", "${u_email}", "${h_password}")`
+
+    database.query(query, (err) => {
+        if (err) throw err;
+        
+    });
+
+    const message = `User Inserted in DB`
+    return message
+}
+
 module.exports = {
     getUserbyID,
     signUser,
-    logUser
+    logUser,
+    insertUser
 }
