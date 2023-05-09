@@ -1,4 +1,4 @@
-const userActions = require("../../actions/user/user.js")
+const userActions = require("../../actions/user.js")
 
 const getUser = (ctx) => {
     const id = ctx.params.id_user

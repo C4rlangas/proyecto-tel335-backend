@@ -1,6 +1,7 @@
 //* DEPENDENCIES AND MODULES*/
 const Router = require('koa-router')
 const User = require("./user/user.js")
+const DB = require("./db/db.js")
 
 const router = new Router()
 
@@ -16,6 +17,8 @@ router.post('/api/user/signup', User.signUp)
 router.post('/api/user/login', User.logIn)
 
 router.post('/api/db/test', User.Insert)
+
+router.get('/api/db/init', DB.Init)
 
 //* Exports */
 module.exports = router

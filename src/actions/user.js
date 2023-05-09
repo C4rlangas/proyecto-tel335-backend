@@ -1,7 +1,7 @@
 //* All code logic related with SignUp and LogIn body request is here *//
 
 //* DEPENDENCIES AND MODULES*/
-const database = require('../../db.js');
+const database = require('../db.js');
 
 const bcrypt = require('bcrypt')
 
@@ -77,7 +77,8 @@ const insertUser = async (name, lastname, u_name ,u_email, u_password) => {
     const h_password = await bcrypt.hash(u_password, saltRounds)
 
     //Register in System
-    const query = `INSERT INTO Usuarios (nombre, apellido, username, email, password) VALUES ("${name}", "${lastname}", "${u_name}", "${u_email}", "${h_password}")`
+    const query =  `INSERT INTO Usuarios (nombre, apellido, username, email, password) 
+                    VALUES ("${name}", "${lastname}", "${u_name}", "${u_email}", "${h_password}")`
 
     database.query(query, (err) => {
         if (err) throw err;
