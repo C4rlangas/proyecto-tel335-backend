@@ -1,13 +1,16 @@
-const mysql = require('mysql2');
-
+const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-const database = mysql.createConnection({
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
-    host:process.env.DB_HOST
-});
+const Connection = async () => {
+    database = await mysql.createConnection({
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        port: process.env.DB_PORT,
+        host:process.env.DB_HOST
+    });
+    return database
+}
 
-module.exports = database;
+
+module.exports = Connection;
