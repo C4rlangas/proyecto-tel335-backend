@@ -6,9 +6,7 @@ const getHealth = (ctx) => {
 }
 
 const Init = async (ctx) => {
-
     const message = await userActions.tableInitializer()
-
     ctx.body = {"Message": message}
     return ctx
 }
@@ -21,7 +19,6 @@ const getUser = async (ctx) => {
 }
 
 const signUp = async (ctx) => {
-
     const name = ctx.request.body.name
     const lastname = ctx.request.body.lastname
     const username = ctx.request.body.username
@@ -29,7 +26,7 @@ const signUp = async (ctx) => {
     const password = ctx.request.body.password
     
     const message = await userActions.insertUser(name,lastname,username,email,password)
-    
+
     ctx.body = {"Message": message}
     return ctx
 }
@@ -37,9 +34,7 @@ const signUp = async (ctx) => {
 const logIn = async (ctx) => {
     const email = ctx.request.body.email
     const password = ctx.request.body.password
-
     const message = await userActions.checkUser(email,password)
-
     ctx.body = {"Message": message}
     return ctx
 }
