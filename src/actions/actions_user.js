@@ -59,16 +59,16 @@ const checkUser = async (userEmail, userPassword) => {
         [userEmail]);
 
     if (rows[0] === undefined) {
-        return `Email ${userEmail} not valid`
+        return {Message:`Email ${userEmail} not valid`}
     }
 
     //Check if password matches
     const passMatches = await bcrypt.compare(userPassword, rows[0].password) //El orden importa, primero la clave normal y luego la hasheada
     if (!passMatches) {
-        return "Incorrect Password"
+        return {Message:"Incorrect Password"}
     }
 
-    return "LogIn Success"
+    return {Message:"LogIn Success", user_id:rows[0].user_id}
 }
 
 module.exports = {
