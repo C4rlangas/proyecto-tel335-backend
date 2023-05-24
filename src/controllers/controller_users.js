@@ -35,7 +35,7 @@ const logIn = async (ctx) => {
     const email = ctx.request.body.email
     const password = ctx.request.body.password
     const message = await userActions.checkUser(email,password)
-    ctx.body = {"Message": message}
+    ctx.body = message
     return ctx
 }
 
