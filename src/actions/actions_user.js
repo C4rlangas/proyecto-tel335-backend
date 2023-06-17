@@ -1,32 +1,37 @@
 //* All code logic related with SignUp and LogIn body request is here *//
-const connection = require('../db.js');
 const queries = require('../queries/user.js')
 const bcrypt = require('bcrypt')
 
 //Parameters
-saltRounds = 2
+const saltRounds = 2
 
-//Falta trabajar en esta accion
-const getUserbyID = async (userID) => {
-
-    const database = await connection()
+const getUserbyID = async (database, userID) => {
 
     const [rows] = await database.query(
         queries.getUserbyID,
         [userID]);
 
     return rows
+
 }
 
-const tableInitializer = async () => {
-    const database = await connection()
+const getUsers = async (database) => {
+
+    const [rows] = await database.query(
+        queries.getUsers);
+
+    return rows
+
+}
+
+const tableInitializer = async (database) => {
+
     await database.query(queries.createTable)
+
     return "Tabla creada"
 }
 
-const insertUser = async (name, lastname, userName, userEmail, userPassword) => {
-    //Database Connection
-    const database = await connection()
+const insertUser = async (database, name, lastname, userName, userEmail, userPassword) => {
 
     //Check if user already in system by email
     const [rows] = await database.query(
@@ -34,7 +39,7 @@ const insertUser = async (name, lastname, userName, userEmail, userPassword) => 
         [userEmail]);
 
     if (rows[0]['COUNT(*)'] >= 1) {
-        return `Email ${userEmail} already in use`
+        return false
     }
 
     //Hashing password
@@ -45,13 +50,10 @@ const insertUser = async (name, lastname, userName, userEmail, userPassword) => 
         queries.addUser,
         [name, lastname, userName, userEmail, h_password])
 
-    return "User Inserted in DB"
+    return true
 }
 
-const checkUser = async (userEmail, userPassword) => {
-
-    //Database Connection
-    const database = await connection()
+const checkUser = async (database, userEmail, userPassword) => {
 
     //Check if user already in system by email
     const [rows] = await database.query(
@@ -59,20 +61,21 @@ const checkUser = async (userEmail, userPassword) => {
         [userEmail]);
 
     if (rows[0] === undefined) {
-        return {Message:`Email ${userEmail} not valid`}
+        return false
     }
 
     //Check if password matches
     const passMatches = await bcrypt.compare(userPassword, rows[0].password) //El orden importa, primero la clave normal y luego la hasheada
     if (!passMatches) {
-        return {Message:"Incorrect Password"}
+        return false
     }
 
-    return {Message:"LogIn Success", user_id:rows[0].user_id}
+    return true
 }
 
 module.exports = {
     getUserbyID,
+    getUsers,
     checkUser,
     insertUser,
     tableInitializer

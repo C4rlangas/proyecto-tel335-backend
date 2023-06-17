@@ -15,6 +15,12 @@ app.use(User_router.routes())
 app.use(Notebook_router.routes())
 app.use(Pages_router.routes())
 
+app.on('error', (err,ctx) => {
+    console.log(err.message)
+    ctx.body = err
+    return ctx
+})
+
 app.listen(port, () => {
     console.log(`Listening in port ${port}`)
 })

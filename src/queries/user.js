@@ -3,6 +3,12 @@ SELECT nombre, apellido, username, email
 FROM Usuarios
 WHERE user_id = ?
 `
+
+const getUsers = `
+SELECT *
+FROM Usuarios
+`
+
 const createTable = `
 CREATE TABLE IF NOT EXISTS Usuarios(user_id int AUTO_INCREMENT, nombre VARCHAR(50), apellido VARCHAR(50), username VARCHAR(20),
 email VARCHAR(50), password VARCHAR(60), PRIMARY KEY(user_id))
@@ -27,6 +33,7 @@ WHERE email=?
 
 module.exports = {
     getUserbyID,
+    getUsers,
     checkUserbyEmail,
     addUser,
     getPassbyEmail,
