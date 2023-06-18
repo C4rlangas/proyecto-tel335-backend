@@ -16,7 +16,6 @@ const Init = async (ctx) => {
         }
         
         const message = await userActions.tableInitializer(database)
-    
         ctx.body = message
         
         return ctx
@@ -44,7 +43,6 @@ const getUser = async (ctx) => {
 
         return ctx
     }
-
     catch(err){
         ctx.throw(err.code, err.message)
     }
@@ -63,14 +61,12 @@ const getUsers = async (ctx) => {
 
         return ctx
     }
-
     catch(err){
         ctx.throw(err.code, err.message)
     }
 }
 
 const signUp = async (ctx) => {
-
     try{
 
         const database = await connection()

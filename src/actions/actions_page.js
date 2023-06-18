@@ -1,9 +1,6 @@
-const connection = require('../db.js');
 const queries = require('../queries/page.js')
 
-const tableInitializer = async () => {
-
-    const database = await connection()
+const tableInitializer = async (database) => {
 
     await database.query(queries.createTable)
 
@@ -11,9 +8,7 @@ const tableInitializer = async () => {
 }
 
 
-const getPagesbyNotebookID = async (notebookID) => {
-
-    const database = await connection()
+const getPagesbyNotebookID = async (database, notebookID) => {
 
     const [rows] = await database.query(
         queries.getPagesbyNotebookID,
@@ -23,11 +18,8 @@ const getPagesbyNotebookID = async (notebookID) => {
 }
 
 
-const insertPage = async (notebookID, text, title, date) => {
-    //Database Connection
-    const database = await connection()
-
-    //Register in System
+const insertPage = async (database, notebookID, text, title, date) => {
+    
     await database.query(
         queries.addPage,
         [notebookID, text, title, date])
@@ -36,8 +28,7 @@ const insertPage = async (notebookID, text, title, date) => {
 }
 
 
-const updatePage = async (pageID, text, title, date) => {
-    const database = await connection()
+const updatePage = async (database, pageID, text, title, date) => {
 
     await database.query(
         queries.updatePage,
@@ -46,8 +37,7 @@ const updatePage = async (pageID, text, title, date) => {
     return "Page Updated in DB"
 }
 
-const removePage = async (pageID) => {
-    const database = await connection()
+const removePage = async (database, pageID) => {
 
     await database.query(
         queries.removePage,

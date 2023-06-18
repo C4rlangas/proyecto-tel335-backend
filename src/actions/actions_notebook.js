@@ -1,9 +1,6 @@
-const connection = require('../db.js');
 const queries = require('../queries/notebook.js')
 
-const tableInitializer = async () => {
-
-    const database = await connection()
+const tableInitializer = async (database) => {
 
     await database.query(queries.createTable)
 
@@ -11,9 +8,7 @@ const tableInitializer = async () => {
 }
 
 
-const getNotebooksbyUserID = async (userID) => {
-
-    const database = await connection()
+const getNotebooksbyUserID = async (database, userID) => {
 
     const [rows] = await database.query(
         queries.getNotebooksbyUserID,
@@ -23,11 +18,8 @@ const getNotebooksbyUserID = async (userID) => {
 }
 
 
-const insertNotebook = async (userID, title, color) => {
-    //Database Connection
-    const database = await connection()
+const insertNotebook = async (database, userID, title, color) => {
 
-    //Insert in Database
     await database.query(
         queries.addNotebook,
         [userID, title, color])
@@ -36,8 +28,7 @@ const insertNotebook = async (userID, title, color) => {
 }
 
 
-const updateNotebook = async (notebookID, title, color) => {
-    const database = await connection()
+const updateNotebook = async (database, notebookID, title, color) => {
     
     await database.query(
         queries.updateNotebook,
@@ -46,8 +37,7 @@ const updateNotebook = async (notebookID, title, color) => {
     return "Notebook Updated in DB"
 }
 
-const removeNotebook = async (notebookID) => {
-    const database = await connection()
+const removeNotebook = async (database, notebookID) => {
 
     await database.query(
         queries.removeNotebook,
