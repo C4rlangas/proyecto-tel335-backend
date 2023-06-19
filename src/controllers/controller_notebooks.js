@@ -1,6 +1,9 @@
 const notebookActions = require("../actions/actions_notebook.js")
 const connection = require('../db.js');
 const ERROR = require("../error.js")
+const jwt = require("jsonwebtoken")
+
+require('dotenv').config();
 
 
 const Init = async (ctx) => {
@@ -24,12 +27,31 @@ const Init = async (ctx) => {
 const getNotebooks = async (ctx) => {
     try{
 
+        const auth = ctx.header.authorization
+        if(!auth){
+            throw ERROR.TOKEN_ERROR
+        }
+
+        const token = auth.split(" ")[1]
+        const token_data = jwt.verify(token, process.env.CLAVE_SECRETA, (err, decoded) => {
+            if(!err){
+                return decoded
+            }
+
+            switch(err.message){
+                case "jwt expired":
+                    throw ERROR.EXP_ERROR
+                default:
+                    throw ERROR.TOKEN_ERROR
+            }
+        })
+
         const database = await connection()
         if(!database){
             throw ERROR.DB_ERROR
         }
 
-        const userID = Number(ctx.params.userID)
+        const userID = token_data.sub
         if((!userID) || (isNaN(userID))){
             throw ERROR.VALUE_ERROR
         }
@@ -47,12 +69,31 @@ const getNotebooks = async (ctx) => {
 const postNotebook = async (ctx) => {
     try{
 
+        const auth = ctx.header.authorization
+        if(!auth){
+            throw ERROR.TOKEN_ERROR
+        }
+
+        const token = auth.split(" ")[1]
+        const token_data = jwt.verify(token, process.env.CLAVE_SECRETA, (err, decoded) => {
+            if(!err){
+                return decoded
+            }
+
+            switch(err.message){
+                case "jwt expired":
+                    throw ERROR.EXP_ERROR
+                default:
+                    throw ERROR.TOKEN_ERROR
+            }
+        })
+
         const database = await connection()
         if(!database){
             throw ERROR.DB_ERROR
         }
 
-        const userID = Number(ctx.request.body.user_id)
+        const userID = token_data.sub
         const title = ctx.request.body.titulo
         const color = ctx.request.body.color
         if((!userID) || (!title) || (isNaN(userID))){
@@ -72,6 +113,25 @@ const postNotebook = async (ctx) => {
 const putNotebook = async (ctx) => {
     try{
 
+        const auth = ctx.header.authorization
+        if(!auth){
+            throw ERROR.TOKEN_ERROR
+        }
+
+        const token = auth.split(" ")[1]
+        const token_data = jwt.verify(token, process.env.CLAVE_SECRETA, (err, decoded) => {
+            if(!err){
+                return decoded
+            }
+
+            switch(err.message){
+                case "jwt expired":
+                    throw ERROR.EXP_ERROR
+                default:
+                    throw ERROR.TOKEN_ERROR
+            }
+        })
+
         const database = await connection()
         if(!database){
             throw ERROR.DB_ERROR
@@ -84,8 +144,12 @@ const putNotebook = async (ctx) => {
             throw ERROR.VALUE_ERROR
         }
     
-        const message = await notebookActions.updateNotebook(database, notebookID, title, color)
-        ctx.body = message
+        const succeed = await notebookActions.updateNotebook(database, token_data.sub, notebookID, title, color)
+        if(!succeed){
+            throw ERROR.NOTE_ERROR
+        }
+
+        ctx.body = "Notebook Updated in DB"
 
         return ctx
     }
@@ -97,6 +161,25 @@ const putNotebook = async (ctx) => {
 const deleteNotebook = async (ctx) => {
     try{
 
+        const auth = ctx.header.authorization
+        if(!auth){
+            throw ERROR.TOKEN_ERROR
+        }
+
+        const token = auth.split(" ")[1]
+        const token_data = jwt.verify(token, process.env.CLAVE_SECRETA, (err, decoded) => {
+            if(!err){
+                return decoded
+            }
+
+            switch(err.message){
+                case "jwt expired":
+                    throw ERROR.EXP_ERROR
+                default:
+                    throw ERROR.TOKEN_ERROR
+            }
+        })
+
         const database = await connection()
         if(!database){
             throw ERROR.DB_ERROR
@@ -107,8 +190,12 @@ const deleteNotebook = async (ctx) => {
             throw ERROR.VALUE_ERROR
         }
     
-        const message = await notebookActions.removeNotebook(database, notebookID)
-        ctx.body = message
+        const succeed = await notebookActions.removeNotebook(database, token_data.sub, notebookID)
+        if(!succeed){
+            throw ERROR.NOTE_ERROR
+        }
+
+        ctx.body = "Notebook deleted from DB"
         
         return ctx
     }

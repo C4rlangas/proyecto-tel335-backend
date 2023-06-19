@@ -26,7 +26,7 @@ VALUES (?, ?, ?, ?, ?)
 `
 
 const getPassbyEmail = `
-SELECT user_id, password 
+SELECT user_id, username, password 
 FROM Usuarios 
 WHERE email=?
 `

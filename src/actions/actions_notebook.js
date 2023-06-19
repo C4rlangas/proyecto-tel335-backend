@@ -28,17 +28,33 @@ const insertNotebook = async (database, userID, title, color) => {
 }
 
 
-const updateNotebook = async (database, notebookID, title, color) => {
+const updateNotebook = async (database, userID, notebookID, title, color) => {
+
+    const [rows] = await database.query(
+        queries.checkNotebookbyUserID,
+        [userID, notebookID]);
     
+    if(rows.length === 0){
+        return false
+    }
+
     await database.query(
         queries.updateNotebook,
         [title, color, notebookID])
 
-    return "Notebook Updated in DB"
+    return true
 }
 
-const removeNotebook = async (database, notebookID) => {
+const removeNotebook = async (database, userID, notebookID) => {
 
+    const [rows] = await database.query(
+        queries.checkNotebookbyUserID,
+        [userID, notebookID]);
+    
+    if(rows.length === 0){
+        return false
+    }
+    
     await database.query(
         queries.removeNotebook,
         [notebookID])

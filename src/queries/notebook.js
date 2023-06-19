@@ -9,6 +9,12 @@ FROM Notebooks
 WHERE user_id = ?
 `
 
+const checkNotebookbyUserID = `
+SELECT notebook_id
+FROM Notebooks
+WHERE user_id = ? AND notebook_id = ?
+`
+
 const addNotebook = `
 INSERT INTO Notebooks (user_id, titulo, color) 
 VALUES (?, ?, ?)
@@ -29,6 +35,7 @@ WHERE notebook_id = ?;
 module.exports = {
     createTable,
     getNotebooksbyUserID,
+    checkNotebookbyUserID,
     addNotebook,
     updateNotebook,
     removeNotebook

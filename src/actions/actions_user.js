@@ -1,6 +1,9 @@
 //* All code logic related with SignUp and LogIn body request is here *//
 const queries = require('../queries/user.js')
 const bcrypt = require('bcrypt')
+const jwt = require("jsonwebtoken")
+
+require('dotenv').config();
 
 //Parameters
 const saltRounds = 2
@@ -59,18 +62,25 @@ const checkUser = async (database, userEmail, userPassword) => {
     const [rows] = await database.query(
         queries.getPassbyEmail,
         [userEmail]);
+    const data = rows[0]
 
-    if (rows[0] === undefined) {
-        return false
+    if (data === undefined) {
+        return [false, null]
     }
 
     //Check if password matches
-    const passMatches = await bcrypt.compare(userPassword, rows[0].password) //El orden importa, primero la clave normal y luego la hasheada
+    const passMatches = await bcrypt.compare(userPassword, data.password) //El orden importa, primero la clave normal y luego la hasheada
     if (!passMatches) {
-        return false
+        return [false, null]
     }
 
-    return true
+    const secret = process.env.CLAVE_SECRETA
+    const token = jwt.sign({
+        sub: data.user_id,
+        username: data.username,
+    }, secret, { expiresIn: '1d'})
+
+    return [true, token]
 }
 
 module.exports = {

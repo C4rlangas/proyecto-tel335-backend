@@ -83,8 +83,8 @@ const signUp = async (ctx) => {
             throw ERROR.VALUE_ERROR
         }
         
-        const succed = await userActions.insertUser(database,name,lastname,username,email,password)
-        if(!succed){
+        const succeed = await userActions.insertUser(database,name,lastname,username,email,password)
+        if(!succeed){
             throw ERROR.CONFLICT_ERROR
         }
 
@@ -117,13 +117,13 @@ const logIn = async (ctx) => {
             throw ERROR.VALUE_ERROR
         }
     
-        const succeed = await userActions.checkUser(database, email,password)
+        const [succeed, token] = await userActions.checkUser(database, email,password)
 
         if(!succeed){
             throw ERROR.CRED_ERROR
         }
 
-        ctx.body = "Login Successful"
+        ctx.body = token
 
         return ctx
     }

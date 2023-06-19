@@ -1,6 +1,7 @@
 const pageActions = require("../actions/actions_page.js")
 const connection = require('../db.js');
 const ERROR = require("../error.js")
+const jwt = require("jsonwebtoken")
 
 
 const Init = async (ctx) => {
@@ -24,6 +25,25 @@ const Init = async (ctx) => {
 const getPages = async (ctx) => {
     try{
 
+        const auth = ctx.header.authorization
+        if(!auth){
+            throw ERROR.TOKEN_ERROR
+        }
+
+        const token = auth.split(" ")[1]
+        const token_data = jwt.verify(token, process.env.CLAVE_SECRETA, (err, decoded) => {
+            if(!err){
+                return decoded
+            }
+
+            switch(err.message){
+                case "jwt expired":
+                    throw ERROR.EXP_ERROR
+                default:
+                    throw ERROR.TOKEN_ERROR
+            }
+        })
+
         const database = await connection()
         if(!database){
             throw ERROR.DB_ERROR
@@ -34,7 +54,11 @@ const getPages = async (ctx) => {
             throw ERROR.VALUE_ERROR
         }
 
-        const message = await pageActions.getPagesbyNotebookID(database, notebookID) 
+        const message = await pageActions.getPagesbyNotebookID(database, token_data.sub, notebookID) 
+        if(!message){
+            throw ERROR.NOTE_ERROR
+        }
+
         ctx.body = message
 
         return ctx
@@ -47,6 +71,25 @@ const getPages = async (ctx) => {
 const postPage = async (ctx) => { //***** Falta lógica para evitar ingresar páginas con mismo titulo ********//
     try{
         
+        const auth = ctx.header.authorization
+        if(!auth){
+            throw ERROR.TOKEN_ERROR
+        }
+
+        const token = auth.split(" ")[1]
+        const token_data = jwt.verify(token, process.env.CLAVE_SECRETA, (err, decoded) => {
+            if(!err){
+                return decoded
+            }
+
+            switch(err.message){
+                case "jwt expired":
+                    throw ERROR.EXP_ERROR
+                default:
+                    throw ERROR.TOKEN_ERROR
+            }
+        })
+
         const database = await connection()
         if(!database){
             throw ERROR.DB_ERROR
@@ -60,8 +103,12 @@ const postPage = async (ctx) => { //***** Falta lógica para evitar ingresar pá
             throw ERROR.VALUE_ERROR
         }
         
-        const message = await pageActions.insertPage(database, notebookID, text, title, date)
-        ctx.body = message
+        const succeed = await pageActions.insertPage(database, token_data.sub, notebookID, text, title, date)
+        if(!succeed){
+            throw ERROR.NOTE_ERROR
+        }
+
+        ctx.body = "Page Inserted in DB"
 
         return ctx
     }
@@ -72,6 +119,25 @@ const postPage = async (ctx) => { //***** Falta lógica para evitar ingresar pá
 
 const putPage = async (ctx) => {
     try{
+
+        const auth = ctx.header.authorization
+        if(!auth){
+            throw ERROR.TOKEN_ERROR
+        }
+
+        const token = auth.split(" ")[1]
+        const token_data = jwt.verify(token, process.env.CLAVE_SECRETA, (err, decoded) => {
+            if(!err){
+                return decoded
+            }
+
+            switch(err.message){
+                case "jwt expired":
+                    throw ERROR.EXP_ERROR
+                default:
+                    throw ERROR.TOKEN_ERROR
+            }
+        })
 
         const database = await connection()
         if(!database){
@@ -86,8 +152,12 @@ const putPage = async (ctx) => {
             throw ERROR.VALUE_ERROR
         }
     
-        const message = await pageActions.updatePage(database, pageID, text, title, date)
-        ctx.body = message
+        const succeed = await pageActions.updatePage(database, token_data.sub, pageID, text, title, date)
+        if(!succeed){
+            throw ERROR.PAGE_ERROR
+        }
+
+        ctx.body = "Page Updated in DB"
 
         return ctx
     }
@@ -99,6 +169,25 @@ const putPage = async (ctx) => {
 const deletePage = async (ctx) => {
     try{
 
+        const auth = ctx.header.authorization
+        if(!auth){
+            throw ERROR.TOKEN_ERROR
+        }
+
+        const token = auth.split(" ")[1]
+        const token_data = jwt.verify(token, process.env.CLAVE_SECRETA, (err, decoded) => {
+            if(!err){
+                return decoded
+            }
+
+            switch(err.message){
+                case "jwt expired":
+                    throw ERROR.EXP_ERROR
+                default:
+                    throw ERROR.TOKEN_ERROR
+            }
+        })
+
         const database = await connection()
         if(!database){
             throw ERROR.DB_ERROR
@@ -109,8 +198,12 @@ const deletePage = async (ctx) => {
             throw ERROR.VALUE_ERROR
         }
     
-        const message = await pageActions.removePage(database, pageID)
-        ctx.body = message
+        const succeed = await pageActions.removePage(database, token_data.sub, pageID)
+        if(!succeed){
+            throw ERROR.PAGE_ERROR
+        }
+
+        ctx.body = "Page Deleted from DB"
         
         return ctx
     }

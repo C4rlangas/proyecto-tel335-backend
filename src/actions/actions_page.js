@@ -8,7 +8,15 @@ const tableInitializer = async (database) => {
 }
 
 
-const getPagesbyNotebookID = async (database, notebookID) => {
+const getPagesbyNotebookID = async (database, userID, notebookID) => {
+
+    const [note] = await database.query(
+        queries.checkNotebookbyUserID,
+        [userID, notebookID]);
+    
+    if(note.length === 0){
+        return false
+    }
 
     const [rows] = await database.query(
         queries.getPagesbyNotebookID,
@@ -18,32 +26,56 @@ const getPagesbyNotebookID = async (database, notebookID) => {
 }
 
 
-const insertPage = async (database, notebookID, text, title, date) => {
+const insertPage = async (database, userID, notebookID, text, title, date) => {
+    
+    const [note] = await database.query(
+        queries.checkNotebookbyUserID,
+        [userID, notebookID]);
+    
+    if(note.length === 0){
+        return false
+    }
     
     await database.query(
         queries.addPage,
         [notebookID, text, title, date])
 
-    return "Page Inserted in DB"
+    return true
 }
 
 
-const updatePage = async (database, pageID, text, title, date) => {
+const updatePage = async (database, userID, pageID, text, title, date) => {
+
+    const [note] = await database.query(
+        queries.checkPagebyUserID,
+        [userID, pageID]);
+    
+    if(note.length === 0){
+        return false
+    }
 
     await database.query(
         queries.updatePage,
         [text, title, date, pageID])
 
-    return "Page Updated in DB"
+    return true
 }
 
-const removePage = async (database, pageID) => {
+const removePage = async (database, userID, pageID) => {
+
+    const [note] = await database.query(
+        queries.checkPagebyUserID,
+        [userID, pageID]);
+    
+    if(note.length === 0){
+        return false
+    }
 
     await database.query(
         queries.removePage,
         [pageID])
 
-    return "Page Deleted from DB"
+    return true
 }
 
 module.exports = {

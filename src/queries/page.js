@@ -9,6 +9,21 @@ FROM Paginas
 WHERE notebook_id = ?
 `
 
+const checkNotebookbyUserID = `
+SELECT notebook_id
+FROM Notebooks
+WHERE user_id = ? AND notebook_id = ?
+`
+
+const checkPagebyUserID = `
+SELECT Paginas.page_id
+FROM Usuarios
+INNER JOIN Notebooks ON Usuarios.user_id=Notebooks.user_id
+INNER JOIN Paginas ON Notebooks.notebook_id=Paginas.notebook_id
+WHERE Usuarios.user_id=? && Paginas.page_id=?
+`
+
+
 const addPage = `
 INSERT INTO Paginas (notebook_id, texto, titulo, fecha) 
 VALUES (?, ?, ?, ?)
@@ -29,6 +44,8 @@ WHERE page_id = ?;
 module.exports = {
     createTable,
     getPagesbyNotebookID,
+    checkNotebookbyUserID,
+    checkPagebyUserID,
     addPage,
     updatePage,
     removePage
