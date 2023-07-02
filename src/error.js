@@ -19,8 +19,11 @@ TOKEN_ERROR.code = 401
 const EXP_ERROR = new Error("Session expired")
 EXP_ERROR.code = 401
 
-const CONFLICT_ERROR = new Error("Parameter already exist:")
-CONFLICT_ERROR.code = 409
+const CONFLICT_ERROR_EMAIL = new Error("Email already exist")
+CONFLICT_ERROR_EMAIL.code = 409
+
+const CONFLICT_ERROR_USERNAME = new Error("Username already exist")
+CONFLICT_ERROR_USERNAME.code = 409
 
 
 module.exports = {
@@ -31,5 +34,6 @@ module.exports = {
     PAGE_ERROR,
     TOKEN_ERROR,
     EXP_ERROR,
-    CONFLICT_ERROR
+    CONFLICT_ERROR_EMAIL,
+    CONFLICT_ERROR_USERNAME
 }

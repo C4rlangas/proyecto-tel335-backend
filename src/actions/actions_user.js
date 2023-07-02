@@ -37,12 +37,21 @@ const tableInitializer = async (database) => {
 const insertUser = async (database, name, lastname, userName, userEmail, userPassword) => {
 
     //Check if user already in system by email
-    const [rows] = await database.query(
+    const [email] = await database.query(
         queries.checkUserbyEmail,
         [userEmail]);
 
-    if (rows[0]['COUNT(*)'] >= 1) {
-        return false
+    if (email.length !== 0) {
+        return [false, 'email']
+    }
+
+    //Check if user already in system by username
+    const [username] = await database.query(
+        queries.checkUserbyUsername,
+        [userName]);
+
+    if (username.length !== 0) {
+        return [false, 'username']
     }
 
     //Hashing password
@@ -53,7 +62,7 @@ const insertUser = async (database, name, lastname, userName, userEmail, userPas
         queries.addUser,
         [name, lastname, userName, userEmail, h_password])
 
-    return true
+    return [true, null]
 }
 
 const checkUser = async (database, userEmail, userPassword) => {

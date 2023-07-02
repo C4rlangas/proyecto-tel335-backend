@@ -15,9 +15,15 @@ email VARCHAR(50), password VARCHAR(60), PRIMARY KEY(user_id))
 `
 
 const checkUserbyEmail = `
-SELECT COUNT(*) 
+SELECT email 
 FROM Usuarios 
 WHERE email= ?
+`
+
+const checkUserbyUsername = `
+SELECT username 
+FROM Usuarios 
+WHERE username= ?
 `
 
 const addUser = `
@@ -35,6 +41,7 @@ module.exports = {
     getUserbyID,
     getUsers,
     checkUserbyEmail,
+    checkUserbyUsername,
     addUser,
     getPassbyEmail,
     createTable

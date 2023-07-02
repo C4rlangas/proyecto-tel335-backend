@@ -20,6 +20,10 @@ const getNotebooksbyUserID = async (database, userID) => {
 
 const insertNotebook = async (database, userID, title, color) => {
 
+    if(!color){
+        color = '#FFFFFF'
+    }
+
     await database.query(
         queries.addNotebook,
         [userID, title, color])
@@ -36,6 +40,10 @@ const updateNotebook = async (database, userID, notebookID, title, color) => {
     
     if(rows.length === 0){
         return false
+    }
+
+    if(!color){
+        color = '#FFFFFF'
     }
 
     await database.query(

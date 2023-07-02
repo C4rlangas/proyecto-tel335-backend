@@ -83,9 +83,15 @@ const signUp = async (ctx) => {
             throw ERROR.VALUE_ERROR
         }
         
-        const succeed = await userActions.insertUser(database,name,lastname,username,email,password)
+        const [succeed, error] = await userActions.insertUser(database,name,lastname,username,email,password)
         if(!succeed){
-            throw ERROR.CONFLICT_ERROR
+            switch(error){
+                case 'email':
+                    throw ERROR.CONFLICT_ERROR_EMAIL
+                case 'username':
+                    throw ERROR.CONFLICT_ERROR_USERNAME
+            }
+            
         }
 
         ctx.body = "Signup Successful"
@@ -93,13 +99,7 @@ const signUp = async (ctx) => {
         return ctx
     }
     catch(err){
-        switch(err.code){
-            case 409:
-                ctx.throw(err.code, err.message + ' Email')
-                break;
-            default:
-                ctx.throw(err.code, err.message)
-        }
+        ctx.throw(err.code, err.message)
     }
 }
 
