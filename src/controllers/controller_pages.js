@@ -99,7 +99,7 @@ const postPage = async (ctx) => { //***** Falta lógica para evitar ingresar pá
         const text = ctx.request.body.texto
         const title = ctx.request.body.titulo
         const date = ctx.request.body.fecha
-        if((!notebookID) || (!title) || (isNaN(notebookID))){
+        if((!notebookID) || (isNaN(notebookID))){
             throw ERROR.VALUE_ERROR
         }
         
@@ -148,7 +148,7 @@ const putPage = async (ctx) => {
         const text = ctx.request.body.texto
         const title = ctx.request.body.titulo
         const date = ctx.request.body.fecha
-        if((!pageID) || (!title) || (isNaN(pageID))){
+        if((!pageID)  || (isNaN(pageID))){
             throw ERROR.VALUE_ERROR
         }
     

@@ -35,6 +35,14 @@ const insertPage = async (database, userID, notebookID, text, title, date) => {
     if(note.length === 0){
         return false
     }
+
+    if(!text){
+        text = ""
+    }
+
+    if(!title){
+        title = ""
+    }
     
     await database.query(
         queries.addPage,
@@ -52,6 +60,14 @@ const updatePage = async (database, userID, pageID, text, title, date) => {
     
     if(note.length === 0){
         return false
+    }
+
+    if(!text){
+        text = ""
+    }
+
+    if(!title){
+        title = ""
     }
 
     await database.query(
