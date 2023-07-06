@@ -14,6 +14,8 @@ const getUserbyID = async (database, userID) => {
         queries.getUserbyID,
         [userID]);
 
+    database.end()
+
     return rows
 
 }
@@ -23,6 +25,8 @@ const getUsers = async (database) => {
     const [rows] = await database.query(
         queries.getUsers);
 
+    database.end()
+
     return rows
 
 }
@@ -30,6 +34,8 @@ const getUsers = async (database) => {
 const tableInitializer = async (database) => {
 
     await database.query(queries.createTable)
+
+    database.end()
 
     return "Tabla creada"
 }
@@ -62,6 +68,8 @@ const insertUser = async (database, name, lastname, userName, userEmail, userPas
         queries.addUser,
         [name, lastname, userName, userEmail, h_password])
 
+    database.end()
+
     return [true, null]
 }
 
@@ -76,6 +84,8 @@ const checkUser = async (database, userEmail, userPassword) => {
     if (data === undefined) {
         return false
     }
+
+    database.end()
 
     //Check if password matches
     const passMatches = await bcrypt.compare(userPassword, data.password) //El orden importa, primero la clave normal y luego la hasheada

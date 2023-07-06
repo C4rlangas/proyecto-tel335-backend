@@ -4,6 +4,8 @@ const tableInitializer = async (database) => {
 
     await database.query(queries.createTable)
 
+    database.end()
+
     return "Tabla creada"
 }
 
@@ -21,6 +23,8 @@ const getPagesbyNotebookID = async (database, userID, notebookID) => {
     const [rows] = await database.query(
         queries.getPagesbyNotebookID,
         [notebookID]);
+
+    database.end()
 
     return rows
 }
@@ -48,6 +52,8 @@ const insertPage = async (database, userID, notebookID, text, title, date) => {
         queries.addPage,
         [notebookID, text, title, date])
 
+    database.end()
+
     return true
 }
 
@@ -74,6 +80,8 @@ const updatePage = async (database, userID, pageID, text, title, date) => {
         queries.updatePage,
         [text, title, date, pageID])
 
+    database.end()
+
     return true
 }
 
@@ -90,6 +98,8 @@ const removePage = async (database, userID, pageID) => {
     await database.query(
         queries.removePage,
         [pageID])
+
+    database.end()
 
     return true
 }
