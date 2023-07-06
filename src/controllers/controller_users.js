@@ -117,13 +117,13 @@ const logIn = async (ctx) => {
             throw ERROR.VALUE_ERROR
         }
     
-        const [succeed, token] = await userActions.checkUser(database, email,password)
+        const succeed = await userActions.checkUser(database, email,password)
 
         if(!succeed){
             throw ERROR.CRED_ERROR
         }
 
-        ctx.body = token
+        ctx.body = succeed
 
         return ctx
     }

@@ -74,13 +74,13 @@ const checkUser = async (database, userEmail, userPassword) => {
     const data = rows[0]
 
     if (data === undefined) {
-        return [false, null]
+        return false
     }
 
     //Check if password matches
     const passMatches = await bcrypt.compare(userPassword, data.password) //El orden importa, primero la clave normal y luego la hasheada
     if (!passMatches) {
-        return [false, null]
+        return false
     }
 
     const secret = process.env.CLAVE_SECRETA
@@ -89,7 +89,13 @@ const checkUser = async (database, userEmail, userPassword) => {
         username: data.username,
     }, secret, { expiresIn: '1d'})
 
-    return [true, token]
+    const message = {
+        token: token,
+        nombre: data.nombre,
+        apellido: data.apellido
+    }
+
+    return message
 }
 
 module.exports = {
